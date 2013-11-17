@@ -22,6 +22,7 @@ public class game : MonoBehaviour {
 	
 	//pertaining to color cubes
 	public ColorCube colorCube;
+	public ActiveCube activeCube; 
 	
 	//pertaining to the GUI
 	Rect timerBox = new Rect (0,0,100,25);
@@ -53,8 +54,12 @@ public class game : MonoBehaviour {
 		displayCube.GetComponent<nextCube>().nextColorInt = 2;
 		
 		colorCube = new ColorCube();
-		colorCube.colorX = 0;
-		colorCube.colorY = 0;
+		colorCube.colorX = 6;
+		colorCube.colorY = 10;
+		
+		activeCube = new ActiveCube();
+		activeCube.activeX = 6;
+		activeCube.activeY = 9;
 		
 	}
 	void GameTimer () {
@@ -118,17 +123,33 @@ public class game : MonoBehaviour {
 		}
 		
 	}
+	
+		void ColorCubeMovement () {
+		if (activeCube.activeX != activeCube.desiredX || activeCube.activeY != activeCube.desiredY){
+			activeCube.activeX = activeCube.desiredX;
+			activeCube.activeY = activeCube.desiredY;
+			cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor = activeCube.activeColor;
+			cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+		}
+		
+	}
 		void CubeAppearence () {
+		
+			foreach (GameObject cube in cubeField) {
+				cube.transform.localScale = new Vector3 (1,1,1);
+			}
 		
 			if (cubeField[colorCube.colorX, colorCube.colorY] && cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().color == false) {
 			cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().color = true;
 			cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().cubeColor = colorCube.cubeColor;
+			print ("color == " + cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().color.ToString());
 			
 			}
-			foreach (GameObject cube in cubeField) {
-				cube.renderer.material.color = cube.GetComponent<fieldCubeBehave>().cubeColor;
-			}
+			if (cubeField[activeCube.activeX,activeCube.activeY] && activeCube.active == true) {
+			cubeField[activeCube.activeX,activeCube.activeY].transform.localScale = new Vector3(2,2,2);
+			cubeField[activeCube.activeX,activeCube.activeY].renderer.material.color = activeCube.activeColor;
 		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
