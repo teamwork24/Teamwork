@@ -23,7 +23,7 @@ public class nextCube : MonoBehaviour{
 			returnColor = Color.red;
 			break;
 		default:
-			returnColor = Color.white;
+			returnColor = Color.grey;
 			break;
 		}
 		return returnColor;

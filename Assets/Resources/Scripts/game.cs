@@ -38,6 +38,10 @@ public class game : MonoBehaviour {
 		nextTurn = theTime + turnInterval;
 		countdown = countdownInterval + theTime;
 		
+		activeCube = new ActiveCube();
+		activeCube.activeX = 6;
+		activeCube.activeY = 9;
+		
 		cubeField = new GameObject [cubeFieldX, cubeFieldY];
 		for (int x = 0; x < cubeFieldX; x++) {
 			for (int y = 0; y < cubeFieldY; y++) {
@@ -46,6 +50,7 @@ public class game : MonoBehaviour {
 				cubeField[x,y].GetComponent<fieldCubeBehave>().cubeX = x;
 				cubeField[x,y].GetComponent<fieldCubeBehave>().cubeY = y;
 				cubeField[x,y].GetComponent<fieldCubeBehave>().cubeField = cubeField;
+				cubeField[x,y].GetComponent<fieldCubeBehave>().activeCube = activeCube;
 			}
 		}
 
@@ -53,15 +58,13 @@ public class game : MonoBehaviour {
 		Instantiate(displayCube, new Vector3(9,17,0), Quaternion.identity);
 		displayCube.GetComponent<nextCube>().nextColorInt = 2;
 		
+		// the ColorCube class and ActiveCube class start off the grid to prevent coloring.
 		colorCube = new ColorCube();
 		colorCube.colorX = 6;
 		colorCube.colorY = 10;
 		
-		activeCube = new ActiveCube();
-		activeCube.activeX = 6;
-		activeCube.activeY = 9;
-		
 	}
+	//for counting down
 	void GameTimer () {
 		theTime += Time.deltaTime ;
 		if (timeRemaining == 0) {
@@ -79,7 +82,7 @@ public class game : MonoBehaviour {
 		if(theTime >= nextTurn){
 			nextTurn += turnInterval;
 			nextCubeDropped = false;
-			displayCube.GetComponent<nextCube>().nextColorInt = Random.Range(1,5);
+			displayCube.GetComponent<nextCube>().nextColorInt = Random.Range(1,4);
 			print ("random is: " + displayCube.GetComponent<nextCube>().nextColorInt);
 			displayCube.renderer.material.color = displayCube.GetComponent<nextCube>().NextCubeColor();
 		}
@@ -123,28 +126,62 @@ public class game : MonoBehaviour {
 		}
 		
 	}
-	
+	//this was a different attempt to move the cube, ignore.
 		void ColorCubeMovement () {
 		if (activeCube.activeX != activeCube.desiredX || activeCube.activeY != activeCube.desiredY){
-			activeCube.activeX = activeCube.desiredX;
-			activeCube.activeY = activeCube.desiredY;
-			cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor = activeCube.activeColor;
-			cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+			activeCube.previousX = activeCube.activeX;
+			activeCube.previousY = activeCube.activeY;
+	
+			
+			if (activeCube.desiredX == activeCube.activeX+1) {
+				//activeCube.targetColor = cubeField[activeCube.activeX+1, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor;
+				activeCube.activeX++;
+				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+				
+			}
+			
+			else if (activeCube.desiredX == activeCube.activeX-1) {
+				//activeCube.targetColor = cubeField[activeCube.activeX-1, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor;
+				activeCube.activeX--;
+				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+			}
+			
+			
+		    if (activeCube.desiredY == activeCube.activeY+1){
+				//activeCube.targetColor = cubeField[activeCube.activeX, activeCube.activeY+1].GetComponent<fieldCubeBehave>().cubeColor;
+				activeCube.activeY++;
+				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+			}
+			
+			else if (activeCube.desiredY == activeCube.activeY-1) {
+				//activeCube.targetColor = cubeField[activeCube.activeX, activeCube.activeY-1].GetComponent<fieldCubeBehave>().cubeColor;
+				activeCube.activeY--;
+				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+			}
+			//if (activeCube.targetColor == Color.white) {
+				cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().color = false;
+			//}
 		}
-		
 	}
+	
+	
+	//this is supposed to take care of the cube's appearence
 		void CubeAppearence () {
-		
 			foreach (GameObject cube in cubeField) {
+				if (cube.GetComponent<fieldCubeBehave>().color == false) {
+				cube.GetComponent<fieldCubeBehave>().cubeColor = Color.white;
+			} 
+				cube.renderer.material.color = cube.GetComponent<fieldCubeBehave>().cubeColor;
 				cube.transform.localScale = new Vector3 (1,1,1);
 			}
-		
+			//this is for assigning colors to white cubes
 			if (cubeField[colorCube.colorX, colorCube.colorY] && cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().color == false) {
 			cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().color = true;
 			cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().cubeColor = colorCube.cubeColor;
 			print ("color == " + cubeField[colorCube.colorX, colorCube.colorY].GetComponent<fieldCubeBehave>().color.ToString());
 			
 			}
+			//this is supposed to set the color for the cube in the same place as active cube.
 			if (cubeField[activeCube.activeX,activeCube.activeY] && activeCube.active == true) {
 			cubeField[activeCube.activeX,activeCube.activeY].transform.localScale = new Vector3(2,2,2);
 			cubeField[activeCube.activeX,activeCube.activeY].renderer.material.color = activeCube.activeColor;
@@ -157,6 +194,7 @@ public class game : MonoBehaviour {
 		Turn ();
 		KeyBoardControl();
 		CubeAppearence();
+		ColorCubeMovement();
 	}
 		void OnGUI () {
 		GUI.Box(timerBox, ("Remaining: ") + timeRemaining.ToString());
@@ -165,6 +203,6 @@ public class game : MonoBehaviour {
 		GUI.Box(turnBox, ("turnInterval: ") + turnInterval.ToString());
 		GUI.Box(nextTurnBox, ("turn: ") + nextTurn.ToString());
 		GUI.Box (colorCubeBox, ("POS: ") + colorCube.colorX.ToString() + (", ") + colorCube.colorY.ToString());
-		GUI.Box (colorCubeBox2, ("color: ") + colorCube.cubeColor.ToString());
+		GUI.Box (colorCubeBox2, ("color: ") + activeCube.targetColor.ToString());
 	}
 }

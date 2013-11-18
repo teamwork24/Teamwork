@@ -3,9 +3,11 @@ using System.Collections;
 
 public class fieldCubeBehave : MonoBehaviour {
 	public int cubeX, cubeY;
+	//the movable ints are supposed to limit the movement of the ActiveCube class, and clicking.
 	public Color cubeColor = Color.white;
 	public bool color = false;
 	public GameObject[,] cubeField;
+	public ActiveCube activeCube;
 	
 	
 	
@@ -21,16 +23,18 @@ public class fieldCubeBehave : MonoBehaviour {
 	
 	void OnMouseDown () {
 		print ("my position is: " + cubeX + "," + cubeY);
-		if (color == true && Camera.main.GetComponent<game>().activeCube.activeX != cubeX || Camera.main.GetComponent<game>().activeCube.activeY != cubeY) {
-			Camera.main.GetComponent<game>().activeCube.activeX = cubeX;
-			Camera.main.GetComponent<game>().activeCube.activeY = cubeY;
-			Camera.main.GetComponent<game>().activeCube.activeColor = cubeField[Camera.main.GetComponent<game>().activeCube.activeX, Camera.main.GetComponent<game>().activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor;
-			
+			if (color == true) {
+			activeCube.activeX = cubeX;
+			activeCube.activeY = cubeY;
+			activeCube.activeColor = cubeColor;
+			activeCube.desiredX = cubeX;
+			activeCube.desiredY = cubeY;
+			activeCube.active = true;
 			
 			}
-		if (color == false && Camera.main.GetComponent<game>().activeCube.active == true){
-			Camera.main.GetComponent<game>().activeCube.desiredX = cubeX;
-			Camera.main.GetComponent<game>().activeCube.desiredY = cubeY;
+			else if (color == false && activeCube.active == true) {
+			activeCube.desiredX = cubeX;
+			activeCube.desiredY = cubeY;
 			}
 		}
 	}
