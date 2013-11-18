@@ -128,40 +128,49 @@ public class game : MonoBehaviour {
 	}
 	//this was a different attempt to move the cube, ignore.
 		void ColorCubeMovement () {
-		if (activeCube.activeX != activeCube.desiredX || activeCube.activeY != activeCube.desiredY){
+		if (activeCube.activeX != activeCube.desiredX || activeCube.activeY != activeCube.desiredY &&
+		cubeField[activeCube.desiredX, activeCube.desiredY].GetComponent<fieldCubeBehave>().color == false){
+			
 			activeCube.previousX = activeCube.activeX;
 			activeCube.previousY = activeCube.activeY;
 	
 			
 			if (activeCube.desiredX == activeCube.activeX+1) {
-				//activeCube.targetColor = cubeField[activeCube.activeX+1, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor;
 				activeCube.activeX++;
-				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
 				
 			}
 			
 			else if (activeCube.desiredX == activeCube.activeX-1) {
-				//activeCube.targetColor = cubeField[activeCube.activeX-1, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor;
 				activeCube.activeX--;
-				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
 			}
 			
 			
 		    if (activeCube.desiredY == activeCube.activeY+1){
-				//activeCube.targetColor = cubeField[activeCube.activeX, activeCube.activeY+1].GetComponent<fieldCubeBehave>().cubeColor;
 				activeCube.activeY++;
-				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
 			}
 			
 			else if (activeCube.desiredY == activeCube.activeY-1) {
-				//activeCube.targetColor = cubeField[activeCube.activeX, activeCube.activeY-1].GetComponent<fieldCubeBehave>().cubeColor;
 				activeCube.activeY--;
-				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
 			}
-			//if (activeCube.targetColor == Color.white) {
-				cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().color = false;
-			//}
+			
 		}
+			if (cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().color == false &&
+				cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().cubeColor != Color.white) {
+				
+					cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().color = true;
+					cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().cubeColor = Color.white;
+			}
+			else {
+				cubeField[activeCube.previousX, activeCube.previousY].GetComponent<fieldCubeBehave>().color = false;
+				
+			}
+		
+		
+		//else if ( activeCube.activeX != activeCube.desiredX || activeCube.activeY != activeCube.desiredY &&
+		//cubeField[activeCube.desiredX, activeCube.desiredY].GetComponent<fieldCubeBehave>().color == true){ 
+		//	cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+		//	cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor = activeCube.activeColor;
+		//}
 	}
 	
 	

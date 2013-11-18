@@ -26,9 +26,9 @@ public class fieldCubeBehave : MonoBehaviour {
 			if (color == true) {
 			activeCube.activeX = cubeX;
 			activeCube.activeY = cubeY;
-			activeCube.activeColor = cubeColor;
 			activeCube.desiredX = cubeX;
 			activeCube.desiredY = cubeY;
+			activeCube.activeColor = cubeColor;
 			activeCube.active = true;
 			
 			}
