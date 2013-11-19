@@ -23,18 +23,27 @@ public class fieldCubeBehave : MonoBehaviour {
 	
 	void OnMouseDown () {
 		print ("my position is: " + cubeX + "," + cubeY);
-			if (color == true) {
-			activeCube.activeX = cubeX;
-			activeCube.activeY = cubeY;
-			activeCube.desiredX = cubeX;
-			activeCube.desiredY = cubeY;
-			activeCube.activeColor = cubeColor;
-			activeCube.active = true;
+		// resets the variables to new "active cubes"
+		
+			if (color == true && activeCube.active == false) {
+				activeCube.activeX = cubeX;
+				activeCube.activeY = cubeY;
+				activeCube.activeColor = cubeColor;
+				activeCube.active = true;
 			
 			}
 			else if (color == false && activeCube.active == true) {
-			activeCube.desiredX = cubeX;
-			activeCube.desiredY = cubeY;
+				activeCube.desiredX = cubeX;
+				activeCube.desiredY = cubeY;
+			}
+			else if(color ==  true && activeCube.active == true){
+				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().color = true;
+				cubeField[activeCube.activeX, activeCube.activeY].GetComponent<fieldCubeBehave>().cubeColor = activeCube.activeColor;
+				activeCube.nextColor = cubeColor;
+				activeCube.activeX = cubeX;
+				activeCube.activeY = cubeY;
+				activeCube.desiredX = cubeX;
+				activeCube.desiredY = cubeY;
 			}
 		}
 	}

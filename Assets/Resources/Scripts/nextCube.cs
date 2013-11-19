@@ -25,6 +25,12 @@ public class nextCube : MonoBehaviour{
 		default:
 			returnColor = Color.grey;
 			break;
+		case 6:
+			returnColor = Color.red;
+			break;
+		case 7:
+			returnColor = Color.cyan;
+			break;
 		}
 		return returnColor;
 	}
